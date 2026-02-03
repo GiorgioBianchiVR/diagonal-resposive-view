@@ -1,0 +1,13 @@
+/* Hide/show based on screen size */
+.content-desktop { display: block; }
+.content-tablet, .content-mobile { display: none; }
+
+@media (max-width: 1024px) and (min-width: 768px) {
+    .content-desktop { display: none; }
+    .content-tablet { display: block; }
+}
+
+@media (max-width: 767px) {
+    .content-desktop, .content-tablet { display: none; }
+    .content-mobile { display: block; }
+}
