@@ -1,17 +1,17 @@
 <div class="content-desktop">
-    <h2>{{title}}</h2>
-    <p>{{description}} <strong>Color: {{color}}</strong></p>
+    <h2>%title%</h2>
+    <p>%description% <strong>Color: %color%</strong></p>
 </div>
 
 <div class="content-tablet">
-    <h3>{{title}}</h3>
-    <p>{{description}}</p>
+    <h3>%title%</h3>
+    <p>%description%</p>
     {% if show_button == 'yes' %}
-        <a href="{{button_link}}" class="my-button">{{button_text}}</a>
+        <a href="%button_link%" class="my-button">%button_text%</a>
     {% endif %}
 </div>
 
 <div class="content-mobile">
-    <h4>{{title}}</h4>
-    <p>{{description}}</p>
+    <h4>%title%</h4>
+    <p>%description%</p>
 </div>

@@ -79,7 +79,8 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
 function render_diag_template( $path, $data ) {
     if ( ! file_exists( $path ) ) return '<p>Missing template</p>';
     $html = file_get_contents( $path );
-    foreach ( $data as $k => $v ) $html = str_replace( "{{$k}}", esc_html($v), $html );
+    $search = '%' . $k . '%';
+    foreach ( $data as $k => $v ) $html = str_replace( $search, esc_html($v), $html );
     $html = preg_replace_callback( '/\{\% if\s+([a-z_]+)\s*==\s*\'yes\'\s*\%\}([^\%]+)\{\% endif\s*\%\}/is', 
         fn($m) => ( isset($data[trim($m[1])]) && $data[trim($m[1])]==='yes' ) ? $m[2] : '', $html );
     return do_shortcode( wp_kses_post( $html ) );
