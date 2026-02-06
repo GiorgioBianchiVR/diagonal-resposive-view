@@ -3,7 +3,7 @@
  * Plugin Name: Diagonal Responsive View
  * Plugin URI: https://github.com/GiorgioBianchiVR/diagonal-resposive-view
  * Description: Custom responsive HTML/CSS block using external template. Dynamic title/description + button.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Giorgio Bianchi
  * Author URI: https://giorgiobianchivr.github.io/gb-site/
  * Text Domain: diag-resp-view
@@ -101,6 +101,6 @@ add_action( 'wp_enqueue_scripts', 'diag_resp_view_enqueue_assets' );
 function diag_resp_view_enqueue_assets() {
     global $post;
     if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'diag_resp_view' ) ) {
-        wp_enqueue_style( 'diag-resp-style', plugin_dir_url( __FILE__ ) . 'assets/css/diag-resp-style.css', [], '1.0.1', 'all' );
+        wp_enqueue_style( 'diag-resp-style', plugin_dir_url( __FILE__ ) . 'assets/css/diag-resp-style.css', [], '1.0.2', 'all' );
     }
 }
