@@ -27,10 +27,12 @@ function diag_resp_view_wpbakery_element() {
         'params' => array(
             array( 'type' => 'textfield', 'heading' => 'Title', 'param_name' => 'title', 'value' => 'Diagonal View' ),
             array( 'type' => 'textarea', 'heading' => 'Description', 'param_name' => 'description', 'value' => 'Responsive content.' ),
-            array( 'type' => 'colorpicker', 'heading' => 'Color', 'param_name' => 'color', 'value' => '#007cba' ),
             array( 'type' => 'checkbox', 'heading' => 'Show Button?', 'param_name' => 'show_button', 'value' => array( 'Yes' => 'yes' ) ),
             array( 'type' => 'textfield', 'heading' => 'Button Text', 'param_name' => 'button_text', 'value' => 'Click Here', 'dependency' => array( 'element' => 'show_button', 'value' => 'yes' ) ),
             array( 'type' => 'vc_link', 'heading' => 'Button Link', 'param_name' => 'button_link', 'dependency' => array( 'element' => 'show_button', 'value' => 'yes' ) )
+            array( 'type' => 'checkbox', 'heading' => 'Is media a video?', 'param_name' => 'is_video', 'value' => array( 'Yes' => 'yes' ) ),
+            array( 'type' => 'textfield', 'heading' => 'Video URL', 'param_name' => 'video_url', 'dependency' => array( 'element' => 'is_video', 'value' => 'yes' ) ),
+            array( 'type' => 'attach_image', 'heading' => 'Image', 'param_name' => 'image_url', 'dependency' => array( 'element' => 'is_video', 'value' => 'no' ) )
         )
     ) );
 }
@@ -48,7 +50,6 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
             $this->start_controls_section( 'content_section', [ 'label' => 'Content' ] );
             $this->add_control( 'title', [ 'label' => 'Title', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Diagonal View' ] );
             $this->add_control( 'description', [ 'label' => 'Description', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'Responsive content.' ] );
-            $this->add_control( 'color', [ 'label' => 'Color', 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#007cba' ] );
             $this->end_controls_section();
 
             $this->start_controls_section( 'button_section', [ 'label' => 'Button' ] );
@@ -63,10 +64,12 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
             $atts = [
                 'title' => $settings['title'],
                 'description' => $settings['description'],
-                'color' => $settings['color'],
+                'is_video' => $settings['is_video'] ?? 'no',
                 'show_button' => $settings['show_button'],
                 'button_text' => $settings['button_text'],
-                'button_link' => $settings['button_link']['url'] ?? ''
+                'button_link' => $settings['button_link']['url'] ?? '',
+                'video_url' => $settings['video_url'] ?? '',
+                'image_url' => $settings['image_url'] ?? ''
             ];
             $shortcode_atts = implode( ' ', array_map( fn($k,$v) => "$k=\"$v\"", array_keys($atts), $atts ) );
             echo do_shortcode( "[diag_resp_view $shortcode_atts]" );
@@ -89,7 +92,7 @@ function render_diag_template( $path, $data ) {
 // Shortcode CORE
 function diag_resp_view_shortcode( $atts ) {
     $path = plugin_dir_path( __FILE__ ) . 'assets/templates/responsive-content.html';
-    $data = shortcode_atts( [ 'title'=>'Diagonal View', 'description'=>'Responsive content.', 'color'=>'#007cba', 'show_button'=>'no', 'button_text'=>'Click Here', 'button_link'=>'' ], $atts );
+    $data = shortcode_atts( [ 'title'=>'Diagonal View', 'description'=>'Responsive content.', 'is_video'=>'no', 'show_button'=>'no', 'button_text'=>'Click Here', 'button_link'=>'', 'video_url'=>'', 'image_url'=>'' ], $atts );
     return '<div class="diag-responsive-view">' . render_diag_template( $path, $data ) . '</div>';
 }
 add_shortcode( 'diag_resp_view', 'diag_resp_view_shortcode' );
