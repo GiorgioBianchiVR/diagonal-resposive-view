@@ -32,7 +32,7 @@ function diag_resp_view_wpbakery_element() {
             array( 'type' => 'vc_link', 'heading' => 'Button Link', 'param_name' => 'button_link', 'dependency' => array( 'element' => 'show_button', 'value' => 'yes' ) ),
             array( 'type' => 'checkbox', 'heading' => 'Is media a video?', 'param_name' => 'is_video', 'value' => array( 'Yes' => 'yes' ) ),
             array( 'type' => 'textfield', 'heading' => 'Video URL', 'param_name' => 'video_url', 'dependency' => array( 'element' => 'is_video', 'value' => 'yes' ) ),
-            array( 'type' => 'attach_image', 'heading' => 'Image', 'param_name' => 'image_url', 'dependency' => array( 'element' => 'is_video', 'value' => 'no' ) )
+            array( 'type' => 'attach_image', 'heading' => 'Image', 'param_name' => 'image_url', 'dependency' => array( 'element' => 'is_video', 'value' => '' ) )
         )
     ) );
 }
@@ -78,16 +78,39 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
     $widgets_manager->register( new Diag_Resp_View_Elementor_Widget() );
 }
 
-// Template Engine
 function render_diag_template( $path, $data ) {
     if ( ! file_exists( $path ) ) return '<p>Missing template</p>';
+
     $html = file_get_contents( $path );
-    $search = '%' . $k . '%';
-    foreach ( $data as $k => $v ) $html = str_replace( $search, esc_html($v), $html );
-    $html = preg_replace_callback( '/\{\% if\s+([a-z_]+)\s*==\s*\'yes\'\s*\%\}([^\%]+)\{\% endif\s*\%\}/is', 
-        fn($m) => ( isset($data[trim($m[1])]) && $data[trim($m[1])]==='yes' ) ? $m[2] : '', $html );
+
+    foreach ( $data as $k => $v ) {
+        $search = '%' . $k . '%';
+        $html = str_replace( $search, esc_html( $v ?: '' ), $html );
+    }
+
+    // Fix: Regex for {% if var == 'yes' %} - flexible whitespace, multiline
+    $html = preg_replace_callback( '/\{\%\s*if\s+([a-z_]+)\s*==\s*\'yes\'\s*\%\}([\s\S]*?)\{\%\s*endif\s*\%\}/i', 
+        function( $m ) use ( $data ) {
+            $var = trim( $m[1] );
+            return ( isset( $data[ $var ] ) && $data[ $var ] === 'yes' ) ? trim( $m[2] ) : '';
+        },
+        $html
+    );
+
+    $html = preg_replace_callback( '/\{\{\s*([a-z_]+)\s*==\s*\'yes\'\s*\?\s*([^\}]+)\s*:\s*([^\}]+)\s*\}\}/i', 
+        function( $m ) use ( $data ) {
+            $var = trim( $m[1] );
+            if ( isset( $data[ $var ] ) && $data[ $var ] === 'yes' ) {
+                return trim( $m[2] );
+            }
+            return trim( $m[3] );
+        },
+        $html
+    );
+
     return do_shortcode( wp_kses_post( $html ) );
 }
+
 
 // Shortcode CORE
 function diag_resp_view_shortcode( $atts ) {
