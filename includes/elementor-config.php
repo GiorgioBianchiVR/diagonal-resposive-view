@@ -1,3 +1,4 @@
+<?php
 // Elementor Widget
 add_action( 'elementor/widgets/register', 'register_diag_resp_view_elementor_widget' );
 function register_diag_resp_view_elementor_widget( $widgets_manager ) {
