@@ -16,114 +16,103 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // WPBakery
-add_action( 'vc_before_init', 'diag_resp_view_wpbakery_element' );
-function diag_resp_view_wpbakery_element() {
-    vc_map( array(
-        'name' => 'Diagonal Responsive View',
-        'base' => 'diag_resp_view',
-        'description' => 'Responsive template with dynamic title/description/button',
-        'category' => 'Custom Elements',
-        'icon' => 'vc_icon-wpbakery-logo',
-        'params' => array(
-            array( 'type' => 'textfield', 'heading' => 'Title', 'param_name' => 'title', 'value' => 'Diagonal View' ),
-            array( 'type' => 'textarea', 'heading' => 'Description', 'param_name' => 'description', 'value' => 'Responsive content.' ),
-            array( 'type' => 'checkbox', 'heading' => 'Show Button?', 'param_name' => 'show_button', 'value' => array( 'Yes' => 'yes' ) ),
-            array( 'type' => 'textfield', 'heading' => 'Button Text', 'param_name' => 'button_text', 'value' => 'Click Here', 'dependency' => array( 'element' => 'show_button', 'value' => 'yes' ) ),
-            array( 'type' => 'vc_link', 'heading' => 'Button Link', 'param_name' => 'button_link', 'dependency' => array( 'element' => 'show_button', 'value' => 'yes' ) ),
-            array( 'type' => 'checkbox', 'heading' => 'Is media a video?', 'param_name' => 'is_video', 'value' => array( 'Yes' => 'yes' ) ),
-            array( 'type' => 'textfield', 'heading' => 'Video URL', 'param_name' => 'video_url', 'dependency' => array( 'element' => 'is_video', 'value' => 'yes' ) ),
-            array( 'type' => 'attach_image', 'heading' => 'Image', 'param_name' => 'image_url', 'dependency' => array( 'element' => 'is_video', 'value' => '' ) )
-        )
-    ) );
-}
+require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
+//Elementor configuration
+require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
-// Elementor Widget
-add_action( 'elementor/widgets/register', 'register_diag_resp_view_elementor_widget' );
-function register_diag_resp_view_elementor_widget( $widgets_manager ) {
-    class Diag_Resp_View_Elementor_Widget extends \Elementor\Widget_Base {
-        public function get_name() { return 'diag_resp_view_elementor'; }
-        public function get_title() { return 'Diagonal Responsive View'; }
-        public function get_icon() { return 'eicon-code'; }
-        public function get_categories() { return [ 'general' ]; }
+function diag_resp_view_shortcode($atts) {
+    $data = shortcode_atts([
+        'title' => 'Diagonal View',
+        'description' => 'Responsive content.',
+        'is_video' => 'no',
+        'show_button' => 'no',
+        'button_text' => 'Click Here',
+        'button_link' => '',
+        'media_id' => '',
+        'image_id' => ''
+    ], $atts);
 
-        protected function register_controls() {
-            $this->start_controls_section( 'content_section', [ 'label' => 'Content' ] );
-            $this->add_control( 'title', [ 'label' => 'Title', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Diagonal View' ] );
-            $this->add_control( 'description', [ 'label' => 'Description', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'Responsive content.' ] );
-            $this->end_controls_section();
-
-            $this->start_controls_section( 'button_section', [ 'label' => 'Button' ] );
-            $this->add_control( 'show_button', [ 'label' => 'Show?', 'type' => \Elementor\Controls_Manager::SWITCHER, 'return_value' => 'yes' ] );
-            $this->add_control( 'button_text', [ 'label' => 'Text', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Click Here', 'condition' => [ 'show_button' => 'yes' ] ] );
-            $this->add_control( 'button_link', [ 'label' => 'Link', 'type' => \Elementor\Controls_Manager::URL, 'condition' => [ 'show_button' => 'yes' ] ] );
-            $this->end_controls_section();
-        }
-
-        protected function render() {
-            $settings = $this->get_settings_for_display();
-            $atts = [
-                'title' => $settings['title'],
-                'description' => $settings['description'],
-                'is_video' => $settings['is_video'] ?? 'no',
-                'show_button' => $settings['show_button'],
-                'button_text' => $settings['button_text'],
-                'button_link' => $settings['button_link']['url'] ?? '',
-                'video_url' => $settings['video_url'] ?? '',
-                'image_url' => $settings['image_url'] ?? ''
-            ];
-            $shortcode_atts = implode( ' ', array_map( fn($k,$v) => "$k=\"$v\"", array_keys($atts), $atts ) );
-            echo do_shortcode( "[diag_resp_view $shortcode_atts]" );
-        }
-    }
-    $widgets_manager->register( new Diag_Resp_View_Elementor_Widget() );
-}
-
-function render_diag_template( $path, $data ) {
-    if ( ! file_exists( $path ) ) return '<p>Missing template</p>';
-
-    $html = file_get_contents( $path );
-
-    foreach ( $data as $k => $v ) {
-        $search = '%' . $k . '%';
-        $html = str_replace( $search, esc_html( $v ?: '' ), $html );
+    // Handle vc_link
+    $button_link = '';
+    if (is_array($data['button_link']) && isset($data['button_link']['url'])) {
+        $button_link = $data['button_link']['url'];
     }
 
-    // Fix: Regex for {% if var == 'yes' %} - flexible whitespace, multiline
-    $html = preg_replace_callback( '/\{\%\s*if\s+([a-z_]+)\s*==\s*\'yes\'\s*\%\}([\s\S]*?)\{\%\s*endif\s*\%\}/i', 
-        function( $m ) use ( $data ) {
-            $var = trim( $m[1] );
-            return ( isset( $data[ $var ] ) && $data[ $var ] === 'yes' ) ? trim( $m[2] ) : '';
-        },
-        $html
-    );
+    // Handle media pickers
+    $media_url = '';
+    if (!empty($data['media_id'])) {
+        $media_file = get_attached_file((int)$data['media_id']);
+        $media_url = wp_get_attachment_url((int)$data['media_id']);
+    }
+    
+    $image_url = '';
+    if (!empty($data['image_id'])) {
+        $image_url = wp_get_attachment_url((int)$data['image_id']);
+    }
 
-    $html = preg_replace_callback( '/\{\{\s*([a-z_]+)\s*==\s*\'yes\'\s*\?\s*([^\}]+)\s*:\s*([^\}]+)\s*\}\}/i', 
-        function( $m ) use ( $data ) {
-            $var = trim( $m[1] );
-            if ( isset( $data[ $var ] ) && $data[ $var ] === 'yes' ) {
-                return trim( $m[2] );
-            }
-            return trim( $m[3] );
-        },
-        $html
-    );
+    $button_html = '';
+    if ($data['show_button'] === 'yes' && !empty($data['button_text'])) {
+        $button_html = '<a href="' . esc_url($button_link) . '" class="my-button">' . esc_html($data['button_text']) . '</a>';
+    }
 
-    return do_shortcode( wp_kses_post( $html ) );
+    if ($data['is_video'] === 'yes' && $media_url) {
+        $media_class = 'media-video';
+        $media_html = '
+            <div class="embed-wrap">
+                <video autoplay muted loop playsinline class="embed">
+                    <source src="' . esc_url($media_url) . '" type="video/mp4">
+                </video>
+            </div>
+            <div class="media-mask diag-mask"></div>';
+    } else {
+        $media_class = 'media-image';
+        $media_html = '
+            <div class="media-mask diag-mask">
+                <img src="' . esc_url($image_url) . '" alt="Hero image" class="masked-image">
+            </div>';
+    }
+
+    $html = '
+    <div class="diag-responsive-view">
+        <div class="content-desktop">
+            <div>
+                <h1>' . esc_html($data['title']) . '</h1>
+                <p>' . esc_html($data['description']) . '</p>
+                ' . $button_html . '
+            </div>
+            <div class="media ' . esc_attr($media_class) . '">
+                ' . $media_html . '
+            </div>
+        </div>
+        <div class="content-tablet">
+            <h3>' . esc_html($data['title']) . '</h3>
+            <p>' . esc_html($data['description']) . '</p>
+            ' . $button_html . '
+        </div>
+        <div class="content-mobile">
+            <h4>' . esc_html($data['title']) . '</h4>
+            <p>' . esc_html($data['description']) . '</p>
+        </div>
+    </div>';
+
+    return do_shortcode(wp_kses_post($html));
 }
+add_shortcode('diag_resp_view', 'diag_resp_view_shortcode');
 
 
-// Shortcode CORE
-function diag_resp_view_shortcode( $atts ) {
-    $path = plugin_dir_path( __FILE__ ) . 'assets/templates/responsive-content.html';
-    $data = shortcode_atts( [ 'title'=>'Diagonal View', 'description'=>'Responsive content.', 'is_video'=>'no', 'show_button'=>'no', 'button_text'=>'Click Here', 'button_link'=>'', 'video_url'=>'', 'image_url'=>'' ], $atts );
-    return '<div class="diag-responsive-view">' . render_diag_template( $path, $data ) . '</div>';
-}
-add_shortcode( 'diag_resp_view', 'diag_resp_view_shortcode' );
-
-add_action( 'wp_enqueue_scripts', 'diag_resp_view_enqueue_assets' );
 function diag_resp_view_enqueue_assets() {
-    global $post;
-    if ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'diag_resp_view' ) ) {
-        wp_enqueue_style( 'diag-resp-style', plugin_dir_url( __FILE__ ) . 'assets/css/diag-resp-style.css', [], '1.0.2', 'all' );
-    }
+    wp_enqueue_style(
+        'diag-resp-style', 
+        plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css', 
+        [], 
+        '1.0.2', 
+        'all' 
+    );
 }
+
+// Frontend + Frontend Editor
+add_action('wp_enqueue_scripts', 'diag_resp_view_enqueue_assets');
+
+// Backend Editor + Classic Editor
+add_action('admin_enqueue_scripts', 'diag_resp_view_enqueue_assets');
+
