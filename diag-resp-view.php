@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // WPBakery
 require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
+
 //Elementor configuration
 //require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
