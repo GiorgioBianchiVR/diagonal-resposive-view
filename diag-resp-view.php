@@ -18,9 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // WPBakery
 require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
 //Elementor configuration
-require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
+//require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
-function diag_resp_view_shortcode($atts) {
+function render($atts) {
+    $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
         'title' => 'Diagonal View',
         'description' => 'Responsive content.',
@@ -38,16 +39,21 @@ function diag_resp_view_shortcode($atts) {
         $button_link = $data['button_link']['url'];
     }
 
-    // Handle media pickers
-    $media_url = '';
+    // Default plugin assets
+    $default_image = $plugin_url . 'assets/images/default-img.webp';
+    $default_video = $plugin_url . 'assets/videos/sample.mp4';
+
+    // Media URLs with fallbacks
+    $media_url = $default_video;
     if (!empty($data['media_id'])) {
-        $media_file = get_attached_file((int)$data['media_id']);
-        $media_url = wp_get_attachment_url((int)$data['media_id']);
+        $custom_media = wp_get_attachment_url((int)$data['media_id']);
+        $media_url = $custom_media ?: $default_video;
     }
-    
-    $image_url = '';
+
+    $image_url = $default_image;
     if (!empty($data['image_id'])) {
-        $image_url = wp_get_attachment_url((int)$data['image_id']);
+        $custom_image = wp_get_attachment_url((int)$data['image_id']);
+        $image_url = $custom_image ?: $default_image;
     }
 
     $button_html = '';
@@ -56,7 +62,6 @@ function diag_resp_view_shortcode($atts) {
     }
 
     if ($data['is_video'] === 'yes' && $media_url) {
-        $media_class = 'media-video';
         $media_html = '
             <div class="embed-wrap">
                 <video autoplay muted loop playsinline class="embed">
@@ -65,7 +70,6 @@ function diag_resp_view_shortcode($atts) {
             </div>
             <div class="media-mask diag-mask"></div>';
     } else {
-        $media_class = 'media-image';
         $media_html = '
             <div class="media-mask diag-mask">
                 <img src="' . esc_url($image_url) . '" alt="Hero image" class="masked-image">
@@ -80,7 +84,7 @@ function diag_resp_view_shortcode($atts) {
                 <p>' . esc_html($data['description']) . '</p>
                 ' . $button_html . '
             </div>
-            <div class="media ' . esc_attr($media_class) . '">
+            <div class="media">
                 ' . $media_html . '
             </div>
         </div>
@@ -97,8 +101,8 @@ function diag_resp_view_shortcode($atts) {
 
     return do_shortcode(wp_kses_post($html));
 }
-add_shortcode('diag_resp_view', 'diag_resp_view_shortcode');
 
+add_shortcode('diag_resp_view', 'render');
 
 function diag_resp_view_enqueue_assets() {
     wp_enqueue_style(
