@@ -3,7 +3,7 @@
  * Plugin Name: Diagonal Responsive View
  * Plugin URI: https://github.com/GiorgioBianchiVR/diagonal-resposive-view
  * Description: Custom responsive HTML/CSS block using external template. Dynamic title/description + button. Can be used with Elementor and WPBakery.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Giorgio Bianchi
  * Author URI: https://giorgiobianchivr.github.io/gb-site/
  * Text Domain: diag-resp-view
@@ -123,7 +123,7 @@ function diag_resp_view_enqueue_assets() {
         'diag-resp-style',
         plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css', 
         [],
-        '1.0.4',
+        '1.0.5',
         'all'
     );
 }
