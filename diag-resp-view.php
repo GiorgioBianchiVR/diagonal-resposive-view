@@ -66,12 +66,13 @@ function render($atts) {
 
     if ($data['is_video'] === 'yes' && $media_url) {
         $media_html = '
-            <div class="embed-wrap">
-                <video autoplay muted loop playsinline class="embed">
-                    <source src="' . esc_url($media_url) . '" type="video/mp4">
-                </video>
-            </div>
-            <div class="media-mask diag-mask"></div>';
+            <div class="media-mask diag-mask">
+                <div class="embed-wrap">
+                    <video autoplay muted loop playsinline class="embed">
+                        <source src="' . esc_url($media_url) . '" type="video/mp4">
+                    </video>
+                </div>
+            </div>';
     } else {
         $media_html = '
             <div class="media-mask diag-mask">
