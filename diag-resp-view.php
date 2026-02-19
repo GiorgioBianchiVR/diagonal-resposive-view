@@ -79,26 +79,36 @@ function render($atts) {
             </div>';
     }
 
+    if ($data['flip_media'] === 'yes') {
+        $media_html = '
+            <div class="media flipped">
+                ' . $media_html . '
+            </div>';
+    } else {
+        $media_html = '
+            <div class="media">
+                ' . $media_html . '
+            </div>';
+    }
+
+    $text_content = '
+        <h1>' . esc_html($data['title']) . '</h1>
+        <p>' . wp_kses_post( $data['description'] ) . '</p>
+        ' . $button_html;
+
     $html = '
     <div class="diag-responsive-view">
         <div class="content-desktop">
-            <div>
-                <h1>' . esc_html($data['title']) . '</h1>
-                <p>' . wp_kses_post( $data['description'] ) . '</p>
-                ' . $button_html . '
-            </div>
-            <div class="media">
-                ' . $media_html . '
-            </div>
+            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
         <div class="content-tablet">
-            <h3>' . esc_html($data['title']) . '</h3>
-            <p>' . esc_html($data['description']) . '</p>
-            ' . $button_html . '
+            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
         <div class="content-mobile">
-            <h4>' . esc_html($data['title']) . '</h4>
-            <p>' . esc_html($data['description']) . '</p>
+            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
     </div>';
 
@@ -109,11 +119,11 @@ add_shortcode('diag_resp_view', 'render');
 
 function diag_resp_view_enqueue_assets() {
     wp_enqueue_style(
-        'diag-resp-style', 
+        'diag-resp-style',
         plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css', 
-        [], 
-        '1.0.4', 
-        'all' 
+        [],
+        '1.0.4',
+        'all'
     );
 }
 
