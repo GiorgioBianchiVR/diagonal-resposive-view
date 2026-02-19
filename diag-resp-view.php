@@ -30,6 +30,11 @@ function render($atts, $content = null) {
         'show_button' => 'no',
         'button_text' => 'Click Here',
         'button_link' => '',
+        'button_bg_color' => '#0041C2',
+        'button_border_radius' => '5px',
+        'button_text_color' => '#FFFFFF',
+        'button_css_classes' => '',
+        'button_align' => 'left',
         'media_url' => '',
         'image_id' => '',
         'mask_tilt' => '20',
@@ -38,10 +43,16 @@ function render($atts, $content = null) {
     // Process $content (from textarea_html)
     $content = wpb_js_remove_wpautop( $content, true );  // WPBakery helper: fixes p tags
 
-    // Handle vc_link
-    $button_link = '';
-    if (is_array($data['button_link']) && isset($data['button_link']['url'])) {
-        $button_link = $data['button_link']['url'];
+    // FIXED vc_link - declare $button_url first, handle string output
+    $button_url = '#';  // Default
+    $button_target = '_self';
+    $button_rel = '';
+    $link_data = $data['button_link'];
+    if (!empty($link_data)) {
+        $link_parsed = vc_build_link($link_data);  // Returns STRING like "url:title|target=..."
+        if ($link_parsed) {
+            $button_url = esc_url($link_parsed);
+        }
     }
 
     // Default plugin assets
@@ -60,9 +71,21 @@ function render($atts, $content = null) {
         $image_url = $custom_image ?: $default_image;
     }
 
+    // Button renders if toggled + text set (link optional)
     $button_html = '';
     if ($data['show_button'] === 'yes' && !empty($data['button_text'])) {
-        $button_html = '<a href="' . esc_url($button_link) . '" class="my-button">' . esc_html($data['button_text']) . '</a>';
+        $button_html = '<div class="button-container ' . esc_attr($data['button_align']) . '">
+            <a href="' . esc_url($button_url) . '" 
+            class="custom-button ' . esc_attr($data['button_css_classes']) . '" 
+            style="
+                background-color: ' . esc_attr($data['button_bg_color']) . ';
+                border-radius: ' . esc_attr($data['button_border_radius']) . ';
+                color: ' . esc_attr($data['button_text_color']) . ';
+            "
+            target="' . esc_attr($button_target) . '"' . $button_rel . '>
+                ' . esc_html($data['button_text']) . '
+            </a>
+        </div>';
     }
 
     if ($data['is_video'] === 'yes' && $media_url) {
