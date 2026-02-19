@@ -18,14 +18,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // WPBakery
 require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
 
-//Elementor configuration
+//Elementor configuration 
+//TODO uncomment when ready
 //require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
 function render($atts) {
     $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
         'title' => 'Diagonal View',
-        'description' => 'Responsive content.',
+        'description' => '<p>Responsive content.</p>',
+        'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
         'button_text' => 'Click Here',
@@ -82,7 +84,7 @@ function render($atts) {
         <div class="content-desktop">
             <div>
                 <h1>' . esc_html($data['title']) . '</h1>
-                <p>' . esc_html($data['description']) . '</p>
+                <p>' . wp_kses_post( $data['description'] ) . '</p>
                 ' . $button_html . '
             </div>
             <div class="media">
