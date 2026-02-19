@@ -6,7 +6,7 @@ function diag_resp_view_wpbakery_element() {
     vc_map(array(
         'name' => 'Diagonal Responsive View',
         'base' => 'diag_resp_view',
-        'description' => 'Responsive template with dynamic title/description/button/media',
+        'description' => 'Responsive template with dynamic title/content/button/media',
         'category' => 'Custom Elements',
         'icon' => 'vc_icon-wpbakery-logo',
         'params' => array(
@@ -45,6 +45,11 @@ function diag_resp_view_wpbakery_element() {
                 'param_name' => 'flip_media', 
                 'value' => array('Yes' => 'yes'),
                 'description' => 'Swap content and media order on desktop.',
+            ),
+            array('type' => 'dropdown', 
+                'heading' => 'Mask Tilt', 
+                'param_name' => 'mask_tilt', 
+                'value' => array('20%' => '20', '30%' => '30', '40%' => '40'),
             ),
             array('type' => 'checkbox', 
                 'heading' => 'Is media a video?', 

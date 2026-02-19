@@ -32,7 +32,8 @@ function render($atts, $content = null) {
         'button_text' => 'Click Here',
         'button_link' => '',
         'media_id' => '',
-        'image_id' => ''
+        'image_id' => '',
+        'mask_tilt' => '20',
     ], $atts);
 
     // Process $content (from textarea_html)
@@ -68,7 +69,7 @@ function render($atts, $content = null) {
 
     if ($data['is_video'] === 'yes' && $media_url) {
         $media_html = '
-            <div class="media-mask diag-mask">
+            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . '">
                 <div class="embed-wrap">
                     <video autoplay muted loop playsinline class="embed">
                         <source src="' . esc_url($media_url) . '" type="video/mp4">
@@ -77,7 +78,7 @@ function render($atts, $content = null) {
             </div>';
     } else {
         $media_html = '
-            <div class="media-mask diag-mask">
+            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . '">
                 <img src="' . esc_url($image_url) . '" alt="Hero image" class="masked-image">
             </div>';
     }
