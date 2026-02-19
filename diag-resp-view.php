@@ -31,7 +31,7 @@ function render($atts, $content = null) {
         'show_button' => 'no',
         'button_text' => 'Click Here',
         'button_link' => '',
-        'media_id' => '',
+        'media_url' => '',
         'image_id' => '',
         'mask_tilt' => '20',
     ], $atts);
@@ -51,9 +51,8 @@ function render($atts, $content = null) {
 
     // Media URLs with fallbacks
     $media_url = $default_video;
-    if (!empty($data['media_id'])) {
-        $custom_media = wp_get_attachment_url((int)$data['media_id']);
-        $media_url = $custom_media ?: $default_video;
+    if (!empty($data['media_url'])) {
+        $media_url = $data['media_url'];
     }
 
     $image_url = $default_image;
@@ -105,7 +104,7 @@ function render($atts, $content = null) {
         </div>
     </div>';
 
-    return do_shortcode(wp_kses_post($html));
+    return $html;
 }
 
 add_shortcode('diag_resp_view', 'render');

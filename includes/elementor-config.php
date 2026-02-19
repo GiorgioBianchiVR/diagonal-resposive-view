@@ -99,7 +99,7 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
                 ]
             );
             $this->add_control(
-                'media_id',
+                'media_url',
                 [
                     'label' => 'Video/Media File',
                     'type' => \Elementor\Controls_Manager::MEDIA,
@@ -129,7 +129,7 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
                 'button_link' => esc_url( $settings['button_link']['url'] ?? '' ),
                 'flip_media' => $settings['flip_media'] ?? 'no',
                 'is_video' => $settings['is_video'] ?? 'no',
-                'media_id' => $settings['media_id']['id'] ?? '',
+                'media_url' => $settings['media_url']['id'] ?? '',
                 'image_id' => $settings['image_id']['id'] ?? '',
             ];
             // Build shortcode atts string safely
