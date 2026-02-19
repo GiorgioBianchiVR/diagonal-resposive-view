@@ -36,7 +36,7 @@
 }
 
 /* Flipped diagonal for left-side media */
-.diag-mask.flipped{
+.flipped > .diag-mask{
     clip-path: polygon(
         0 0,
         100% 0,

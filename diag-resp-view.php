@@ -92,10 +92,11 @@ function render($atts) {
             </div>';
     }
 
-    $text_content = '
+    $text_content = '<div>
         <h1>' . esc_html($data['title']) . '</h1>
         <p>' . wp_kses_post( $data['description'] ) . '</p>
-        ' . $button_html;
+        ' . $button_html . '
+    </div>';
 
     $html = '
     <div class="diag-responsive-view">
