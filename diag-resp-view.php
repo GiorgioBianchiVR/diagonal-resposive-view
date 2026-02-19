@@ -2,10 +2,10 @@
 /**
  * Plugin Name: Diagonal Responsive View
  * Plugin URI: https://github.com/GiorgioBianchiVR/diagonal-resposive-view
- * Description: Custom responsive HTML/CSS block using external template. Dynamic title/description + button. Can be used with Elementor and WPBakery.
+ * Description: Custom responsive HTML/CSS block using external template. Dynamic content + button. Can be used with Elementor and WPBakery.
  * Version: 1.0.6
  * Author: Giorgio Bianchi
- * Author URI: https://giorgiobianchivr.github.io/gb-site/
+ * Author URI: https://giorgiobianchivr.github.io/
  * Text Domain: diag-resp-view
  * Requires at least: 6.0
  * Requires PHP: 8.1
@@ -25,7 +25,6 @@ require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
 function render($atts, $content = null) {
     $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
-        'title' => 'Diagonal View',
         'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
@@ -83,7 +82,6 @@ function render($atts, $content = null) {
     }
 
     $text_content = '<div>
-        <h1>' . esc_html($data['title']) . '</h1>
         ' . wp_kses_post($content) . '
         ' . $button_html . '
     </div>';

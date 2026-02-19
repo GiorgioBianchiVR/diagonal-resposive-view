@@ -17,14 +17,6 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
                 [ 'label' => 'Content', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT ]
             );
             $this->add_control(
-                'title',
-                [
-                    'label' => 'Title',
-                    'type' => \Elementor\Controls_Manager::TEXT,
-                    'default' => 'Diagonal View',
-                ]
-            );
-            $this->add_control(
                 'content',
                 [
                     'label' => 'Content',
@@ -122,7 +114,6 @@ function register_diag_resp_view_elementor_widget( $widgets_manager ) {
         protected function render() {
             $settings = $this->get_settings_for_display();
             $atts = [
-                'title' => esc_attr( $settings['title'] ?? '' ),
                 'content' => $settings['content'] ?? '',
                 'show_button' => $settings['show_button'] ?? 'no',
                 'button_text' => esc_attr( $settings['button_text'] ?? '' ),
