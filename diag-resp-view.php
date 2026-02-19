@@ -26,7 +26,7 @@ function render($atts) {
     $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
         'title' => 'Diagonal View',
-        'description' => '<p>Responsive content.</p>',
+        'content' => '<p>Responsive content.</p>',
         'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
@@ -80,35 +80,23 @@ function render($atts) {
             </div>';
     }
 
-    if ($data['flip_media'] === 'yes') {
-        $media_html = '
-            <div class="media flipped">
-                ' . $media_html . '
-            </div>';
-    } else {
-        $media_html = '
-            <div class="media">
-                ' . $media_html . '
-            </div>';
-    }
-
     $text_content = '<div>
         <h1>' . esc_html($data['title']) . '</h1>
-        <p>' . wp_kses_post( $data['description'] ) . '</p>
+        <p>' . wp_kses_post($data['content']) . '</p>
         ' . $button_html . '
     </div>';
 
     $html = '
     <div class="diag-responsive-view">
-        <div class="content-desktop">
+        <div class="content-desktop ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
             ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
             ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
-        <div class="content-tablet">
+        <div class="content-tablet ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
             ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
             ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
-        <div class="content-mobile">
+        <div class="content-mobile ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
             ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
             ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>

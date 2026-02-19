@@ -1,5 +1,3 @@
-
-
 .content-desktop, .content-tablet, .content-mobile {
     padding: 10px 0;
     grid-template-columns: 33% 66%;
@@ -8,6 +6,7 @@
 }
 
 .flipped {
+    display: grid;
     grid-template-columns: 66% 33%;
     text-align: right;
 }
