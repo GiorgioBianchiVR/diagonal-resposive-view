@@ -22,11 +22,10 @@ require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
 //TODO uncomment when ready
 //require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
-function render($atts) {
+function render($atts, $content = null) {
     $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
         'title' => 'Diagonal View',
-        'content' => '<p>Responsive content.</p>',
         'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
@@ -35,6 +34,9 @@ function render($atts) {
         'media_id' => '',
         'image_id' => ''
     ], $atts);
+
+    // Process $content (from textarea_html)
+    $content = wpb_js_remove_wpautop( $content, true );  // WPBakery helper: fixes p tags
 
     // Handle vc_link
     $button_link = '';
@@ -82,7 +84,7 @@ function render($atts) {
 
     $text_content = '<div>
         <h1>' . esc_html($data['title']) . '</h1>
-        <p>' . wp_kses_post($data['content']) . '</p>
+        ' . wp_kses_post($content) . '
         ' . $button_html . '
     </div>';
 

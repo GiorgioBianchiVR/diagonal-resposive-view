@@ -18,7 +18,7 @@ function diag_resp_view_wpbakery_element() {
             array('type' => 'textarea_html',
                 'holder' => 'div',
                 'heading' => 'Content',
-                'param_name' => 'content', // Important: Only one textarea_html param per content element allowed and it should have "content" as a "param_name"
+                'param_name' => 'content',
                 'value' => '<p>I am test text block. Click edit button to change this text.</p>',
                 'description' => 'Enter your content.',
             ),
@@ -60,7 +60,7 @@ function diag_resp_view_wpbakery_element() {
                 'heading' => 'Image', 
                 'param_name' => 'image_id', 
                 'dependency' => array('element' => 'is_video', 'value_not_equal_to' => 'yes'),
-            )
+            ),
         )
     ));
 }
