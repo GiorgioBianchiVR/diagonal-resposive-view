@@ -51,7 +51,9 @@ function render($atts, $content = null) {
     if (!empty($link_data)) {
         $link_parsed = vc_build_link($link_data);  // Returns STRING like "url:title|target=..."
         if ($link_parsed) {
-            $button_url = esc_url($link_parsed);
+            $button_url = esc_url($link_parsed['url']);
+            $button_target = esc_attr($link_parsed['target']);
+            $button_rel = !empty($link_parsed['rel']) ? ' rel="' . esc_attr($link_parsed['rel']) . '"' : '';
         }
     }
 
