@@ -1,147 +1,121 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-add_action('elementor/widgets/register', 'register_diagrespview_elementor_widget');
-function register_diagrespview_elementor_widget($widgets_manager) {
+// 2. Elementor Widget (EXACT param_name mapping)
+add_action('elementor/widgets/register', 'register_diag_resp_view_elementor');
+function register_diag_resp_view_elementor($widgets_manager) {
     class DiagRespViewElementorWidget extends \Elementor\Widget_Base {
-        public function get_name() { return 'diagrespview'; }
+        public function get_name() { return 'diag_resp_view'; }
         public function get_title() { return 'Diagonal Responsive View'; }
         public function get_icon() { return 'eicon-image-rollover'; }
         public function get_categories() { return ['general']; }
-        public function get_keywords() { return ['diagonal', 'responsive', 'view']; }
 
         protected function register_controls() {
-            // Content (textarea_html -> WYSIWYG)
             $this->start_controls_section('content_section', ['label' => 'Content', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT]);
             $this->add_control('content', [
-                'label' => 'Content',
-                'type' => \Elementor\Controls_Manager::WYSIWYG,
-                'default' => '<h2>Diagonal Responsive View</h2><p>I am test text block. Click edit button to change this text.</p>',
-                'description' => 'Enter your content.'
+                'label' => 'Content', 'type' => \Elementor\Controls_Manager::WYSIWYG,
+                'default' => '<h2>Diagonal Responsive View</h2><p>I am test text block. Click edit button to change this text.</p>'
+            ]);
+            $this->add_control('show_button', [
+                'label' => 'Show Button?', 'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => 'Yes', 'label_off' => 'No', 'return_value' => 'yes'
             ]);
             $this->end_controls_section();
 
-            // Button Settings (checkbox + textfield + vclink + dropdown + colorpickers + textfields)
             $this->start_controls_section('button_section', ['label' => 'Button Settings', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT]);
-            $this->add_control('showbutton', [
-                'label' => 'Show Button?',
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => 'Yes',
-                'label_off' => 'No',
-                'return_value' => 'yes',
-                'default' => 'no'
+            $this->add_control('button_text', [
+                'label' => 'Button Text', 'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'Click Here', 'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttontext', [
-                'label' => 'Button Text',
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => 'Click Here',
-                'condition' => ['showbutton' => 'yes']
+            $this->add_control('button_link', [  // ← EXACT
+                'label' => 'Button Link', 'type' => \Elementor\Controls_Manager::URL,
+                'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttonlink', [
-                'label' => 'Button Link',
-                'type' => \Elementor\Controls_Manager::URL,
-                'placeholder' => 'https://your-link.com',
-                'condition' => ['showbutton' => 'yes']
-            ]);
-            $this->add_control('buttonalign', [
-                'label' => 'Button Alignment',
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'left',
+            $this->add_control('button_align', [
+                'label' => 'Button Alignment', 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => ['left' => 'Left', 'center' => 'Center', 'right' => 'Right'],
-                'condition' => ['showbutton' => 'yes']
+                'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttonbgcolor', [
-                'label' => 'Background Color',
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'default' => '#0041C2',
-                'condition' => ['showbutton' => 'yes']
+            $this->add_control('button_bg_color', [
+                'label' => 'Background Color', 'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => '#0041C2', 'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttontextcolor', [
-                'label' => 'Text Color',
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'default' => '#FFFFFF',
-                'condition' => ['showbutton' => 'yes']
+            $this->add_control('button_text_color', [
+                'label' => 'Text Color', 'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => '#FFFFFF', 'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttonborderradius', [
-                'label' => 'Border Radius',
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => '5px',
-                'condition' => ['showbutton' => 'yes']
+            $this->add_control('button_border_radius', [
+                'label' => 'Border Radius', 'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => '5px', 'condition' => ['show_button' => 'yes']
             ]);
-            $this->add_control('buttoncssclasses', [
-                'label' => 'CSS classes',
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'description' => 'Add custom CSS classes to the button, separated by spaces.',
-                'condition' => ['showbutton' => 'yes']
+            $this->add_control('button_css_classes', [
+                'label' => 'CSS classes', 'type' => \Elementor\Controls_Manager::TEXT,
+                'description' => 'Add custom CSS classes...', 'condition' => ['show_button' => 'yes']
             ]);
             $this->end_controls_section();
 
-            // Media Settings (checkbox flip + dropdown masktilt + checkbox isvideo + textfield/media/image)
             $this->start_controls_section('media_section', ['label' => 'Media', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT]);
-            $this->add_control('flipmedia', [
-                'label' => 'Flip media orientation?',
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => 'Yes',
-                'label_off' => 'No',
-                'return_value' => 'yes',
-                'description' => 'Swap content and media order on desktop.'
+            $this->add_control('flip_media', [
+                'label' => 'Flip media?', 'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => 'Yes', 'label_off' => 'No', 'return_value' => 'yes', 'description' => 'Swap order on desktop.'
             ]);
-            $this->add_control('masktilt', [
-                'label' => 'Mask Tilt',
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => '20',
-                'options' => ['20' => '20', '30' => '30', '40' => '40'],
+            $this->add_control('mask_tilt', [
+                'label' => 'Mask Tilt', 'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => ['20' => '20%', '30' => '30%', '40' => '40%'], 'default' => '20'
             ]);
-            $this->add_control('isvideo', [
-                'label' => 'Is media a video?',
-                'type' => \Elementor\Controls_Manager::SWITCHER,
-                'label_on' => 'Yes',
-                'label_off' => 'No',
-                'return_value' => 'yes'
+            $this->add_control('is_video', [
+                'label' => 'Is video?', 'type' => \Elementor\Controls_Manager::SWITCHER, 'label_on' => 'Yes', 'label_off' => 'No', 'return_value' => 'yes'
             ]);
-            $this->add_control('mediaurl', [
-                'label' => 'Video File url',
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'description' => 'Write the URL of the uploaded video file.',
-                'condition' => ['isvideo' => 'yes']
+            $this->add_control('media_url', [
+                'label' => 'Video URL', 'type' => \Elementor\Controls_Manager::TEXT,
+                'condition' => ['is_video' => 'yes']
             ]);
-            $this->add_control('imageid', [
-                'label' => 'Image',
-                'type' => \Elementor\Controls_Manager::MEDIA,
-                'media_types' => 'image',
-                'condition' => ['isvideo!' => 'yes']
+            $this->add_control('image_id', [
+                'label' => 'Image', 'type' => \Elementor\Controls_Manager::MEDIA,
+                'media_types' => 'image', 'condition' => ['is_video!' => 'yes']
             ]);
             $this->end_controls_section();
         }
 
         protected function render() {
             $settings = $this->get_settings_for_display();
-            $atts = [
-                'content' => $settings['content'] ?? '',
-                'showbutton' => $settings['showbutton'] ?? 'no',
-                'buttontext' => esc_attr($settings['buttontext'] ?? ''),
-                'buttonlink' => esc_url($settings['buttonlink']['url'] ?? ''),
-                'buttonalign' => $settings['buttonalign'] ?? 'left',
-                'buttonbgcolor' => $settings['buttonbgcolor'] ?? '',
-                'buttontextcolor' => $settings['buttontextcolor'] ?? '',
-                'buttonborderradius' => $settings['buttonborderradius'] ?? '',
-                'buttoncssclasses' => $settings['buttoncssclasses'] ?? '',
-                'flipmedia' => $settings['flipmedia'] ?? 'no',
-                'masktilt' => $settings['masktilt'] ?? '20',
-                'isvideo' => $settings['isvideo'] ?? 'no',
-                'mediaurl' => esc_url($settings['mediaurl'] ?? ''),
-                'imageid' => $settings['imageid']['id'] ?? ''
-            ];
 
-            // Build shortcode atts string
-            $shortcode_atts = '';
-            foreach ($atts as $key => $value) {
-                if ($value !== '' && $value !== 'no' && $value !== null) {
-                    $shortcode_atts .= sprintf('%s="%s" ', $key, esc_attr($value));
+            // Build vc_link-like string for button_link if URL provided
+            $button_link_attr = '';
+            if (!empty($settings['button_link']) && is_array($settings['button_link']) && !empty($settings['button_link']['url'])) {
+                $button_link_attr = 'url:' . esc_url($settings['button_link']['url']);
+                if (!empty($settings['button_link']['is_external'])) {
+                    $button_link_attr .= '|target:_blank';
                 }
             }
-            echo do_shortcode('[diagrespview ' . trim($shortcode_atts) . ']');
+
+            $atts = [
+                'show_button' => $settings['show_button'] ?? 'no',
+                'button_text' => $settings['button_text'] ?? '',
+                'button_link' => $button_link_attr,
+                'button_align' => $settings['button_align'] ?? 'left',
+                'button_bg_color' => $settings['button_bg_color'] ?? '',
+                'button_text_color' => $settings['button_text_color'] ?? '',
+                'button_border_radius' => $settings['button_border_radius'] ?? '',
+                'button_css_classes' => $settings['button_css_classes'] ?? '',
+                'flip_media' => $settings['flip_media'] ?? 'no',
+                'mask_tilt' => $settings['mask_tilt'] ?? '20',
+                'is_video' => $settings['is_video'] ?? 'no',
+                'media_url' => $settings['media_url'] ?? '',
+                'image_id' => $settings['image_id']['id'] ?? ''
+            ];
+
+            $shortcode_atts = [];
+            foreach ($atts as $k => $v) {
+                if ($v !== '' && $v !== 'no' && $v !== null) {
+                    $shortcode_atts[] = sprintf('%s="%s"', $k, esc_attr($v));
+                }
+            }
+
+            $content = $settings['content'] ?? '';
+            printf('<div class="elementor-widget-container">%s</div>', do_shortcode('[diag_resp_view ' . implode(' ', $shortcode_atts) . ']' . $content . '[/diag_resp_view]'));
         }
     }
     $widgets_manager->register(new DiagRespViewElementorWidget());
 }
+?>
