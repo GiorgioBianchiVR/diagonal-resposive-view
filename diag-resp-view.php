@@ -19,8 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once plugin_dir_path(__FILE__) . 'includes/vc-config.php';
 
 //Elementor configuration 
-//TODO uncomment when ready
-//require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
+require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 
 function render($atts, $content = null) {
     $plugin_url = plugin_dir_url(__FILE__);
