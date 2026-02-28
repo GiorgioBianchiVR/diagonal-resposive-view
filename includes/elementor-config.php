@@ -1,7 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-// 2. Elementor Widget (EXACT param_name mapping)
 add_action('elementor/widgets/register', 'register_diag_resp_view_elementor');
 function register_diag_resp_view_elementor($widgets_manager) {
     class DiagRespViewElementorWidget extends \Elementor\Widget_Base {
@@ -71,8 +70,14 @@ function register_diag_resp_view_elementor($widgets_manager) {
                 'condition' => ['is_video' => 'yes']
             ]);
             $this->add_control('image_id', [
-                'label' => 'Image', 'type' => \Elementor\Controls_Manager::MEDIA,
-                'media_types' => 'image', 'condition' => ['is_video!' => 'yes']
+                'label'       => 'Image',
+                'type'        => \Elementor\Controls_Manager::MEDIA,
+                'media_types' => ['image'],
+                'default'     => [
+                    'url' => '',
+                    'id'  => '',
+                ],
+                'condition'   => ['is_video!' => 'yes'],
             ]);
             $this->end_controls_section();
         }
@@ -80,9 +85,8 @@ function register_diag_resp_view_elementor($widgets_manager) {
         protected function render() {
             $settings = $this->get_settings_for_display();
 
-            // Build vc_link-like string for button_link if URL provided
             $button_link_attr = '';
-            if (!empty($settings['button_link']) && is_array($settings['button_link']) && !empty($settings['button_link']['url'])) {
+            if (!empty($settings['button_link']['url'])) {
                 $button_link_attr = 'url:' . esc_url($settings['button_link']['url']);
                 if (!empty($settings['button_link']['is_external'])) {
                     $button_link_attr .= '|target:_blank';
@@ -90,31 +94,39 @@ function register_diag_resp_view_elementor($widgets_manager) {
             }
 
             $atts = [
-                'show_button' => $settings['show_button'] ?? 'no',
-                'button_text' => $settings['button_text'] ?? '',
-                'button_link' => $button_link_attr,
-                'button_align' => $settings['button_align'] ?? 'left',
-                'button_bg_color' => $settings['button_bg_color'] ?? '',
-                'button_text_color' => $settings['button_text_color'] ?? '',
+                'show_button'          => $settings['show_button'] ?? 'no',
+                'button_text'          => $settings['button_text'] ?? '',
+                'button_link'          => $button_link_attr,
+                'button_align'         => $settings['button_align'] ?? 'left',
+                'button_bg_color'      => $settings['button_bg_color'] ?? '',
+                'button_text_color'    => $settings['button_text_color'] ?? '',
                 'button_border_radius' => $settings['button_border_radius'] ?? '',
-                'button_css_classes' => $settings['button_css_classes'] ?? '',
-                'flip_media' => $settings['flip_media'] ?? 'no',
-                'mask_tilt' => $settings['mask_tilt'] ?? '20',
-                'is_video' => $settings['is_video'] ?? 'no',
-                'media_url' => $settings['media_url'] ?? '',
-                'image_id' => $settings['image_id']['id'] ?? ''
+                'button_css_classes'   => $settings['button_css_classes'] ?? '',
+                'flip_media'           => $settings['flip_media'] ?? 'no',
+                'mask_tilt'            => $settings['mask_tilt'] ?? '20',
+                'is_video'             => $settings['is_video'] ?? 'no',
+                'media_url'            => esc_url($settings['media_url'] ?? ''),
+                'image_id'             => $settings['image_id']['id'] ?? '',
             ];
 
             $shortcode_atts = [];
             foreach ($atts as $k => $v) {
-                if ($v !== '' && $v !== 'no' && $v !== null) {
+                if ($v !== '' && $v !== null) {
                     $shortcode_atts[] = sprintf('%s="%s"', $k, esc_attr($v));
                 }
             }
 
-            $content = $settings['content'] ?? '';
-            printf('<div class="elementor-widget-container">%s</div>', do_shortcode('[diag_resp_view ' . implode(' ', $shortcode_atts) . ']' . $content . '[/diag_resp_view]'));
+            $content = wp_kses_post($settings['content'] ?? '');
+
+            echo '<div class="elementor-widget-container">';
+            echo do_shortcode(
+                '[diag_resp_view ' . implode(' ', $shortcode_atts) . ']'
+                . $content .
+                '[/diag_resp_view]'
+            );
+            echo '</div>';
         }
+
     }
     $widgets_manager->register(new DiagRespViewElementorWidget());
 }
