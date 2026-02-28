@@ -3,11 +3,11 @@ Contributors: giorgiobianchi
 Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
-Tested up to: 6.9.1
+Tested up to: 6.9
 Stable tag: 1.0.0
 Requires PHP: 7.4
-License: MIT License
-License URI: https://opensource.org/license/mit
+License: MIT
+License URI: https://mit-license.org/
 
 Renders a diagonal, responsive content + media block (image or video) with optional button. Works via shortcode, Elementor, or WPBakery.
 
