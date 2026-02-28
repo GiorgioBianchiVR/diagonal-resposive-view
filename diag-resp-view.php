@@ -3,7 +3,7 @@
  * Plugin Name:       Diagonal Responsive View
  * Plugin URI:        https://github.com/GiorgioBianchiVR/diagonal-resposive-view
  * Description:       Adds a responsive diagonal layout block with dynamic content, optional styled button, image or video media, and configurable mask tilt. Fully compatible with Elementor (WYSIWYG widget) and WPBakery (vc_map element). Output is rendered via an external HTML/CSS template using the [diag_resp_view] shortcode.
- * Version:           1.0.7
+ * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            Giorgio Bianchi
@@ -140,7 +140,7 @@ function diag_resp_view_enqueue_assets() {
         'diag-resp-style',
         plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css', 
         [],
-        '1.0.7',
+        '1.0.0',
         'all'
     );
 }
