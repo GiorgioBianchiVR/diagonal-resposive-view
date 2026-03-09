@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: MIT
 License URI: https://mit-license.org/
@@ -21,19 +21,20 @@ It integrates natively with **Elementor** (dedicated widget) and **WPBakery Page
 
 * Diagonal/masked split layout — content on one side, image or looping video on the other
 * Flip option to swap media and content order
+* On mobile the written content is shown on swipe (left or right)
 * Optional styled button with full color, radius, alignment, and CSS class controls
 * Adjustable mask tilt (20°, 30°, 40°)
 * Native Elementor widget (drag-and-drop, live preview)
 * Native WPBakery element (backend and frontend editor)
 * Plain shortcode support for any editor or theme
 
-**Optimized for desktop and tablet devices.**
+**Optimized for desktop, tablet, and mobile devices.**
 
 == Installation ==
 
 1. Upload the plugin folder to `/wp-content/plugins/` or install it via the WordPress admin Plugins screen → Add New → Upload Plugin.
 2. Activate the plugin from the **Plugins** screen in your WordPress admin.
-3. The plugin automatically enqueues `assets/css/diag-resp-style.css`. No additional setup is required.
+3. Use the plugin via Elementor, WP Bakery, or shortcode
 
 == Usage — Shortcode ==
 
@@ -45,10 +46,11 @@ Basic example:
 
 Advanced example:
 
-`[diag_resp_view flip_media="yes" is_video="no" show_button="yes" button_text="Learn more" button_link="url:https://example.com|target:_blank" button_bg_color="#ff0000" button_border_radius="8px" button_text_color="#ffffff" button_align="center" image_id="123" mask_tilt="30"]<h2>Title</h2><p>Content here.</p>[/diag_resp_view]`
+`[diag_resp_view title="Example Title" flip_media="yes" is_video="no" show_button="yes" button_text="Learn more" button_link="url:https://example.com|target:_blank" button_bg_color="#ff0000" button_border_radius="8px" button_text_color="#ffffff" button_align="center" image_id="123" mask_tilt="30"]<h2>Title</h2><p>Content here.</p>[/diag_resp_view]`
 
 **Supported attributes** (defaults in parentheses):
 
+* `flip_media` (`Diagonal Responsive View`) — Block title
 * `flip_media` (`no`) — `yes` to swap media and content order on desktop
 * `is_video` (`no`) — `yes` to use `media_url` as a looping background video
 * `show_button` (`no`) — `yes` to render a CTA button
@@ -113,6 +115,10 @@ Yes, it has been tested up to WordPress 6.9.1.
 3. WPBakery element configuration popup.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added title control with default parameter
+* Added Mobile optimization
 
 = 1.0.0 =
 * Initial release
