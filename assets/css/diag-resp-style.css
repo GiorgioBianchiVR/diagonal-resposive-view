@@ -23,7 +23,7 @@
     justify-content: flex-end;
 }
 
-.content-desktop, .content-tablet, .content-mobile {
+.content-desktop, .content-tablet {
     padding: 10px 0;
     grid-template-columns: 33% 66%;
     gap: 20px;
@@ -124,14 +124,9 @@
 
 /* Hide/show based on screen size */
 .content-desktop { display: grid; }
-.content-tablet, .content-mobile { display: none; }
+.content-tablet { display: none; }
 
 @media (max-width: 1024px) and (min-width: 768px) {
     .content-desktop { display: none; }
     .content-tablet { display: grid; }
-}
-
-@media (max-width: 767px) {
-    .content-desktop, .content-tablet { display: none; }
-    .content-mobile { display: grid; }
 }

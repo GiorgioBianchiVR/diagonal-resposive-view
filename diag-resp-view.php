@@ -123,10 +123,6 @@ function render($atts, $content = null) {
             ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
             ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
         </div>
-        <div class="content-mobile ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
-            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
-            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
-        </div>
     </div>';
 
     return $html;
@@ -137,11 +133,30 @@ add_shortcode('diag_resp_view', 'render');
 function diag_resp_view_enqueue_assets() {
     wp_enqueue_style(
         'diag-resp-style',
-        plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css', 
+        plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css',
         [],
         '1.0.0',
         'all'
     );
+
+    // Mobile only
+    if ( wp_is_mobile() ) {
+        wp_enqueue_style(
+            'diag-resp-mobile-style',
+            plugin_dir_url(__FILE__) . 'assets/css/diag-resp-mobile.css',
+            ['diag-resp-style'],
+            '1.0.0',
+            'all'
+        );
+
+        wp_enqueue_script(
+            'diag-resp-mobile-script',
+            plugin_dir_url(__FILE__) . 'assets/js/diag-resp-mobile.js',
+            [],
+            '1.0.0',
+            true // load in footer
+        );
+    }
 }
 
 // Frontend + Frontend Editor
@@ -149,4 +164,5 @@ add_action('wp_enqueue_scripts', 'diag_resp_view_enqueue_assets');
 
 // Backend Editor + Classic Editor
 add_action('admin_enqueue_scripts', 'diag_resp_view_enqueue_assets');
+
 
