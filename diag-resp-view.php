@@ -27,6 +27,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/elementor-config.php';
 function render($atts, $content = null) {
     $plugin_url = plugin_dir_url(__FILE__);
     $data = shortcode_atts([
+        'title' => 'Diagonal Responsive View',
         'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
@@ -92,9 +93,12 @@ function render($atts, $content = null) {
         </div>';
     }
 
+    $is_mobile = wp_is_mobile();
+
     if ($data['is_video'] === 'yes' && $media_url) {
         $media_html = '
-            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . '">
+            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . ' 
+            ' . ( $data['flip_media'] === 'yes' && $is_mobile ? 'flipped' : '' ) . '">
                 <div class="embed-wrap">
                     <video autoplay muted loop playsinline class="embed">
                         <source src="' . esc_url($media_url) . '" type="video/mp4">
@@ -103,32 +107,37 @@ function render($atts, $content = null) {
             </div>';
     } else {
         $media_html = '
-            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . '">
+            <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . ' 
+            ' . ( $data['flip_media'] === 'yes' && $is_mobile ? 'flipped' : '' ) . '">
                 <img src="' . esc_url($image_url) . '" alt="Hero image" class="masked-image">
             </div>';
     }
 
+
     $text_content = '<div>
+            ' . ( $is_mobile ? '' : '<h2>' . esc_html($data['title']) . '</h2>' ) . '
             ' . wp_kses_post($content) . '
             ' . $button_html . '
         </div>';
-
-    $is_mobile = wp_is_mobile();
 
     if($is_mobile) {
         $html = '
         <div class="container">
             <div class="panel-viewport">
-                <div class="panel-track">
-                    <div class="col-left ' . ( $data['flip_media'] === 'yes' ? '' : 'flipped' ) . '">
+                <div class="panel-track ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                    <div class="col col-left">
                         ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
+                        ' . ( $data['flip_media'] === 'yes' ? '' : '<h2 class="title">' . esc_html($data['title']) . '</h2>' ) . '
                     </div>
 
-                    <div class="col-right ' . ( $data['flip_media'] === 'yes' ? '' : 'flipped' ) . '">
+                    <div class="col col-right">
                         ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+                        ' . ( $data['flip_media'] === 'yes' ? '<h2 class="title">' . esc_html($data['title']) . '</h2>' : '' ) . '
                     </div>
                 </div>
-                <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">&#8594;</div>
+                <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                ' . ( $data['flip_media'] === 'yes' ? '&#8592;' : '&#8594;' ) . '
+                </div>
             </div>
         </div>';
     } else {
@@ -155,7 +164,7 @@ function diag_resp_view_enqueue_assets() {
         'diag-resp-style',
         plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css',
         [],
-        '1.0.0',
+        '1.0.2',
         'all'
     );
 
@@ -165,7 +174,7 @@ function diag_resp_view_enqueue_assets() {
             'diag-resp-mobile-style',
             plugin_dir_url(__FILE__) . 'assets/css/diag-resp-mobile.css',
             ['diag-resp-style'],
-            '1.0.0',
+            '1.0.2',
             'all'
         );
 
@@ -173,7 +182,7 @@ function diag_resp_view_enqueue_assets() {
             'diag-resp-mobile-script',
             plugin_dir_url(__FILE__) . 'assets/js/diag-resp-mobile.js',
             [],
-            '1.0.1',
+            '1.0.2',
             true // load in footer
         );
     }

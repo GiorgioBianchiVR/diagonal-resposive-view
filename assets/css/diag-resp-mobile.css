@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0;
+  padding: 5px;
   gap: 20px;
 }
 
@@ -16,18 +16,20 @@
 
 /* The 200vw track containing both columns */
 .panel-track {
-  display: flex;
-  width: 200vw;
-  height: auto;
-  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-  user-select: none;
+    display: flex;
+    width: 200vw;
+    height: auto;
+    transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+    user-select: none;
 }
 
 .panel-track.dragging {
   transition: none;
 }
+
 .col {
+    display: inline-block;
     height: 100%;
     background: transparent;
     display: flex;
@@ -36,49 +38,37 @@
     flex-direction: column;
 }
 .col-left {
-    width: 45%;
+    width: 58%;
     margin-left: 10px;
 }
 
-.col-left .flipped {
-    width:55%;
+.flipped > .col-left {
+    width:42%;
     gap: 12px;
     padding: 24px;
 }
 
 .col-right {
-    width: 55%;
+    width: 42%;
     gap: 12px;
     padding: 24px;
     margin-right:10px;
 }
 
-.col-right .flipped {
-    width:45%;
+.flipped > .col-right {
+    width:58%;
     gap: 0px;
     padding: 0px;
 }
 
-.col-left h2,
-.col-right h2 {
+.col-left .title,
+.col-right .title {
     position: absolute;
     top:50%;
     left:25%;
     transform: translate(-50%, -50%); 
     font-size: 1.5rem;
     color:#fff;
-}
-
-.col-left h3,
-.col-right h3 {
-    font-size: 1.5rem;
-}
-
-.col-left p,
-.col-right p {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  text-align: center;
 }
 
 /* Hint arrow swipe left*/
@@ -90,12 +80,66 @@
     color: white;
     border-radius: 20px;
     padding: 6px 14px;
-    font-size: 0.8rem;
+    font-size: 1rem;
     pointer-events: none;
     backdrop-filter: blur(4px);
     transition: opacity 0.4s;
 }
 
-.swipe-hint .flipped {
-  right: 20px;
+.swipe-hint.flipped {
+    left: auto;
+    right: 20px;
+}
+
+/* Diagonal mask 20% for right-side media */
+.diag-mask-20.flipped{
+    clip-path: polygon(
+        20% 0,
+        100% 0,
+        100% 100%,
+        0% 100%);
+}
+
+/* Flipped diagonal for left-side media */
+.diag-mask-20{
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        80% 100%,
+        0% 100%);
+}
+
+/* Diagonal mask 30% for right-side media */
+.diag-mask-30.flipped{
+    clip-path: polygon(
+        30% 0,
+        100% 0,
+        100% 100%,
+        0% 100%);
+}
+
+/* Flipped diagonal for left-side media */
+.diag-mask-30{
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        70% 100%,
+        0% 100%);
+}
+/* Diagonal mask 40% for right-side media */
+.diag-mask-40.flipped{
+    clip-path: polygon(
+        40% 0,
+        100% 0,
+        100% 100%,
+        0% 100%);
+}
+
+/* Flipped diagonal for left-side media */
+.diag-mask-40{
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        60% 100%,
+        0% 100%);
 }

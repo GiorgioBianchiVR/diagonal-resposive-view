@@ -10,6 +10,12 @@ function diag_resp_view_wpbakery_element() {
         'category' => 'Custom Elements',
         'icon' => 'vc_icon-wpbakery-logo',
         'params' => array(
+            array('type' => 'textfield', 
+                'heading' => 'Title', 
+                'param_name' => 'title',
+                'value' => 'Diagonal Responsive View',
+                'description' => 'Enter title for you block',
+            ),
             array('type' => 'textarea_html',
                 'holder' => 'div',
                 'heading' => 'Content',

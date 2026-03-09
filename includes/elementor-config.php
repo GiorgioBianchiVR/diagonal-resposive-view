@@ -11,9 +11,13 @@ function register_diag_resp_view_elementor($widgets_manager) {
 
         protected function register_controls() {
             $this->start_controls_section('content_section', ['label' => 'Content', 'tab' => \Elementor\Controls_Manager::TAB_CONTENT]);
+            $this->add_control('title', [
+                'label' => 'Title', 'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'Diagonal Responsive View'
+            ]);
             $this->add_control('content', [
                 'label' => 'Content', 'type' => \Elementor\Controls_Manager::WYSIWYG,
-                'default' => '<h2>Diagonal Responsive View</h2><p>I am test text block. Click edit button to change this text.</p>'
+                'default' => '<p>I am test text block. Click edit button to change this text.</p>'
             ]);
             $this->add_control('show_button', [
                 'label' => 'Show Button?', 'type' => \Elementor\Controls_Manager::SWITCHER,
