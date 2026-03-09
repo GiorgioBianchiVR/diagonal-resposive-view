@@ -1,0 +1,91 @@
+.container {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  gap: 20px;
+}
+
+/* Viewport: clips the 200vw inner track */
+.panel-viewport {
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* The 200vw track containing both columns */
+.panel-track {
+  display: flex;
+  width: 200vw;
+  height: 60vh;
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  cursor: grab;
+  user-select: none;
+}
+
+.panel-track.dragging {
+  transition: none;
+}
+
+.col-left {
+  width: 55%;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+  margin-left: 10px;
+}
+
+.col-right {
+  width: 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  margin-right:10px;
+}
+
+.col-left h2,
+.col-right h2 {
+    position: absolute;
+    top:50%;
+    left:25%;
+    transform: translate(-50%, -50%); 
+    font-size: 1.5rem;
+    color:#fff;
+}
+
+.col-left h3,
+.col-right h3 {
+    font-size: 1.5rem;
+}
+
+.col-left p,
+.col-right p {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  text-align: center;
+}
+
+/* Hint arrow swipe left*/
+.swipe-hint {
+  position: absolute;
+  bottom: 14px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s;
+}
