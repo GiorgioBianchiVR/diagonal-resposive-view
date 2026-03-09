@@ -109,21 +109,42 @@ function render($atts, $content = null) {
     }
 
     $text_content = '<div>
-        ' . wp_kses_post($content) . '
-        ' . $button_html . '
-    </div>';
+            ' . wp_kses_post($content) . '
+            ' . $button_html . '
+        </div>';
 
-    $html = '
-    <div class="diag-responsive-view">
-        <div class="content-desktop ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
-            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
-            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
-        </div>
-        <div class="content-tablet ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
-            ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
-            ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
-        </div>
-    </div>';
+    $is_mobile = wp_is_mobile();
+
+    if($is_mobile) {
+        $html = '
+        <div class="container">
+            <div class="panel-viewport">
+                <div class="panel-track">
+                    <div class="col-left ' . ( $data['flip_media'] === 'yes' ? 'flpped' : 'flipped' ) . '">
+                        ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
+                    </div>
+
+                    <div class="col-right ' . ( $data['flip_media'] === 'yes' ? '' : 'flipped' ) . '">
+                        ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+                    </div>
+
+                </div>
+                <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">&#8594;</div>
+            </div>
+        </div>';
+    } else {
+        $html = '
+        <div class="diag-responsive-view">
+            <div class="content-desktop ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+                ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
+            </div>
+            <div class="content-tablet ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+                ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
+            </div>
+        </div>';
+    }
 
     return $html;
 }
@@ -153,7 +174,7 @@ function diag_resp_view_enqueue_assets() {
             'diag-resp-mobile-script',
             plugin_dir_url(__FILE__) . 'assets/js/diag-resp-mobile.js',
             [],
-            '1.0.0',
+            '1.0.1',
             true // load in footer
         );
     }
