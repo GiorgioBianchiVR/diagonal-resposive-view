@@ -36,25 +36,25 @@
     flex-direction: column;
 }
 .col-left {
-    width: 55%;
+    width: 45%;
     margin-left: 10px;
 }
 
 .col-left .flipped {
-    width:45%;
+    width:55%;
     gap: 12px;
     padding: 24px;
 }
 
 .col-right {
-    width: 45%;
+    width: 55%;
     gap: 12px;
     padding: 24px;
     margin-right:10px;
 }
 
 .col-right .flipped {
-    width:55%;
+    width:45%;
     gap: 0px;
     padding: 0px;
 }

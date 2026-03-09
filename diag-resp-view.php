@@ -120,14 +120,13 @@ function render($atts, $content = null) {
         <div class="container">
             <div class="panel-viewport">
                 <div class="panel-track">
-                    <div class="col-left ' . ( $data['flip_media'] === 'yes' ? 'flpped' : 'flipped' ) . '">
+                    <div class="col-left ' . ( $data['flip_media'] === 'yes' ? '' : 'flipped' ) . '">
                         ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
                     </div>
 
                     <div class="col-right ' . ( $data['flip_media'] === 'yes' ? '' : 'flipped' ) . '">
                         ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
                     </div>
-
                 </div>
                 <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">&#8594;</div>
             </div>
