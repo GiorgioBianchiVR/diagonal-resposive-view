@@ -61,14 +61,21 @@
     padding: 0px;
 }
 
-.col-left .title,
-.col-right .title {
+.title {
     position: absolute;
+    color:#fff;
+}
+
+.col-left .title{
     top:50%;
     left:25%;
-    transform: translate(-50%, -50%); 
-    font-size: 1.5rem;
-    color:#fff;
+    transform: translate(-50%, -50%);
+}
+
+.col-right .title {
+    top:50%;
+    right:25%;
+    transform: translate(50%, -50%);
 }
 
 /* Hint arrow swipe left*/
@@ -78,9 +85,9 @@
     left: 20px;
     background: rgba(255, 255, 255, 0.25);
     color: white;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 1rem;
+    border-radius: 10px;
+    padding: 0px 15px;
+    font-size: 1.2rem;
     pointer-events: none;
     backdrop-filter: blur(4px);
     transition: opacity 0.4s;
