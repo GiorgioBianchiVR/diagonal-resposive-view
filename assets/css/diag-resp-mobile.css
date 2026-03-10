@@ -48,6 +48,8 @@
     padding: 24px;
 }
 
+/*TODO add correct text alignment*/
+/*TODO resolve problem with image dimensions when there is too much text*/
 .col-right {
     width: 42%;
     gap: 12px;
