@@ -7,7 +7,7 @@
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Giorgio Bianchi
- * Author URI:        https://giorgiobianchivr.github.io/
+ * Author URI:        https://github.com/GiorgioBianchiVR/
  * Plugin URI:        https://github.com/GiorgioBianchiVR/diagonal-resposive-view
  * Text Domain:       diag-resp-view
  * License:           MIT
