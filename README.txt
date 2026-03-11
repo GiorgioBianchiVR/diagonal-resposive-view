@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: MIT
 License URI: https://mit-license.org/
@@ -120,7 +120,7 @@ Yes, it has been tested up to WordPress 6.9.1.
 * Updated README.txt
 * Author URI reference
 
-= 1.1.2 =
+= 1.2.0 =
 * Added title control with default parameter
 * Added Mobile optimization
 
