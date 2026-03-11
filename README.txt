@@ -116,13 +116,16 @@ Yes, it has been tested up to WordPress 6.9.1.
 
 == Changelog ==
 
+= 1.2.0 =
+* Fixed vertical stretch for image and video
+
+= 1.1.2 =
+* Added title control with default parameter
+* Added Mobile optimization
+
 = 1.1.1 =
 * Updated README.txt
 * Author URI reference
-
-= 1.2.0 =
-* Added title control with default parameter
-* Added Mobile optimization
 
 = 1.0.0 =
 * Initial release
