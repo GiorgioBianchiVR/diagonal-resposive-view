@@ -18,7 +18,6 @@
 .panel-track {
     display: flex;
     width: 200vw;
-    height: auto;
     transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
     user-select: none;
@@ -30,13 +29,19 @@
 
 .col {
     display: inline-block;
-    height: 100%;
+    height: auto;
     background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
+
+.col .media-mask {
+    height: 100%;
+    flex: 1;
+}
+
 .col-left {
     width: 58%;
     margin-left: 10px;
