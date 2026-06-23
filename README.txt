@@ -3,7 +3,7 @@ Contributors: giorgiobianchi
 Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 1.2.0
 Requires PHP: 7.4
 License: MIT

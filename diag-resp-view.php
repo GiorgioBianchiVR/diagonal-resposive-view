@@ -31,6 +31,7 @@ function render($atts, $content = null) {
         'flip_media' => 'no',
         'is_video' => 'no',
         'show_button' => 'no',
+        'mobile_track' => 'no',
         'button_text' => 'Click Here',
         'button_link' => '',
         'button_bg_color' => '#0041C2',
@@ -95,7 +96,28 @@ function render($atts, $content = null) {
 
     $is_mobile = wp_is_mobile();
 
-    if ($data['is_video'] === 'yes' && $media_url) {
+    if($is_mobile && $data['mobile_track'] === 'no') {
+        if($data['is_video'] === 'yes') {
+            $media_html = '
+                <section class="mobile-card-front">
+                    <video autoplay muted loop>
+                        <source src="' . esc_url($media_url) . '" type="video/mp4">
+                    </video>
+                    <div class="video-caption">
+                        <h1 class="title">' . esc_html($data['title']) . '</h1>
+                    </div>
+                </section>';
+        } else {
+            $media_html = '
+                <section class="mobile-card-front">
+                    <img src="' . esc_url($image_url) . '" alt="Card image" class="masked-image">
+                    <div class="image-caption">
+                        <h1 class="title">' . esc_html($data['title']) . '</h1>
+                    </div>
+                </section>';
+        }
+    } else {
+        if ($data['is_video'] === 'yes' && $media_url) {
         $media_html = '
             <div class="media-mask diag-mask-' . esc_attr($data['mask_tilt']) . ' 
             ' . ( $data['flip_media'] === 'yes' && $is_mobile ? 'flipped' : '' ) . '">
@@ -112,7 +134,7 @@ function render($atts, $content = null) {
                 <img src="' . esc_url($image_url) . '" alt="Hero image" class="masked-image">
             </div>';
     }
-
+    }
 
     $text_content = '<div>
             ' . ( $is_mobile ? '' : '<h2>' . esc_html($data['title']) . '</h2>' ) . '
@@ -121,25 +143,35 @@ function render($atts, $content = null) {
         </div>';
 
     if($is_mobile) {
-        $html = '
-        <div class="container">
-            <div class="panel-viewport">
-                <div class="panel-track ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
-                    <div class="col col-left">
-                        ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
-                        ' . ( $data['flip_media'] === 'yes' ? '' : '<h2 class="title">' . esc_html($data['title']) . '</h2>' ) . '
-                    </div>
+        if($data['mobile_track'] === 'yes') {
+            $html = '
+                <div class="container">
+                    <div class="panel-viewport">
+                        <div class="panel-track ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                            <div class="col col-left">
+                                ' . ( $data['flip_media'] === 'yes' ? $text_content : $media_html ) . '
+                                ' . ( $data['flip_media'] === 'yes' ? '' : '<h2 class="title">' . esc_html($data['title']) . '</h2>' ) . '
+                            </div>
 
-                    <div class="col col-right">
-                        ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
-                        ' . ( $data['flip_media'] === 'yes' ? '<h2 class="title">' . esc_html($data['title']) . '</h2>' : '' ) . '
+                            <div class="col col-right">
+                                ' . ( $data['flip_media'] === 'yes' ? $media_html : $text_content ) . '
+                                ' . ( $data['flip_media'] === 'yes' ? '<h2 class="title">' . esc_html($data['title']) . '</h2>' : '' ) . '
+                            </div>
+                        </div>
+                        <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
+                        ' . ( $data['flip_media'] === 'yes' ? '&#8592;' : '&#8594;' ) . '
+                        </div>
                     </div>
-                </div>
-                <div class="swipe-hint ' . ( $data['flip_media'] === 'yes' ? 'flipped' : '' ) . '">
-                ' . ( $data['flip_media'] === 'yes' ? '&#8592;' : '&#8594;' ) . '
-                </div>
-            </div>
-        </div>';
+                </div>';
+        } else {
+            $html = '
+                    <div class="container">
+                        <div class="mobile-card-container">
+                            ' . $media_html . '
+                            ' . $text_content . '
+                        </div>
+                    </div>';
+        }
     } else {
         $html = '
         <div class="diag-responsive-view">

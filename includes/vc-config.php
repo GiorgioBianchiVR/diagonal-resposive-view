@@ -103,6 +103,11 @@ function diag_resp_view_wpbakery_element() {
                 'param_name' => 'image_id', 
                 'dependency' => array('element' => 'is_video', 'value_not_equal_to' => 'yes'),
             ),
+            array('type' => 'checkbox', 
+                'heading' => 'Sliding image on mobile?', 
+                'param_name' => 'mobile_track', 
+                'value' => array('Yes' => 'yes'),
+            ),
         )
     ));
 }
