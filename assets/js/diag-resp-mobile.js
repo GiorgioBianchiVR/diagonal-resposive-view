@@ -1,6 +1,6 @@
 // Configuration for scroll-triggered snaps
 const SCROLL_SNAP_ENABLED = true;
-const SCROLL_SNAP_DELAY_MS = 150; // delay before snapping on entry
+const SCROLL_SNAP_DELAY_MS = 250; // delay before snapping on entry
 const SCROLL_THRESHOLD = 0.75; // 75% visible counts as "entered"
 const MOBILE_ONLY = true;
 
@@ -20,8 +20,14 @@ function initScrollObserverIfNeeded() {
     entries.forEach(entry => {
       const inst = entry.target.__panelInstance;
       if (!inst) return;
-      if (entry.intersectionRatio >= SCROLL_THRESHOLD) inst.onEnter();
-      else inst.onExit();
+
+      if (entry.intersectionRatio >= SCROLL_THRESHOLD) {
+        inst.onEnter();
+      } else {
+        const rootBottom = entry.rootBounds ? entry.rootBounds.bottom : window.innerHeight;
+        const isBottomExit = entry.boundingClientRect.bottom >= window.innerHeight;
+        inst.onExit(isBottomExit);
+      }
     });
   }, { threshold: SCROLL_THRESHOLD });
 }
@@ -56,7 +62,7 @@ document.querySelectorAll('.panel-viewport').forEach(viewport => {
   // Apply translateX to the track, with or without CSS transition
   function setOffset(vw, animate = true) {
     track.style.transition = animate
-      ? 'transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      ? 'transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
       : 'none';
     track.style.transform = `translateX(${vw}vw)`;
     currentOffset = vw;
@@ -86,10 +92,11 @@ document.querySelectorAll('.panel-viewport').forEach(viewport => {
     }, SCROLL_SNAP_DELAY_MS);
   }
 
-  function onExit() {
+  function onExit(isBottomExit) {
     clearEnterTimeout();
     if (isDragging) return;
-    // Snap back to initial position when leaving
+    if (!isBottomExit) return;
+    // Snap back to initial position only when leaving by scrolling down past the bottom
     snapTo(0);
   }
 
