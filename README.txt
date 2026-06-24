@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
 Tested up to: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 Requires PHP: 7.4
 License: MIT
 License URI: https://mit-license.org/
@@ -106,7 +106,7 @@ The UI controls support tilt values of `20`, `30`, and `40` degrees via the `mas
 
 = Is it compatible with the latest version of WordPress? =
 
-Yes, it has been tested up to WordPress 6.9.1.
+Yes, it has been tested up to WordPress 7.0.
 
 == Screenshots ==
 
@@ -115,6 +115,9 @@ Yes, it has been tested up to WordPress 6.9.1.
 3. WPBakery element configuration popup.
 
 == Changelog ==
+
+= 1.3.0 =
+* Implemented flip card visualisation as default for mobile devices
 
 = 1.2.0 =
 * Fixed vertical stretch for image and video

@@ -3,7 +3,7 @@
  * Plugin Name:       Diagonal Responsive View
  * Plugin URI:        https://github.com/GiorgioBianchiVR/diagonal-resposive-view
  * Description:       Adds a responsive diagonal layout block with dynamic content, optional styled button, image or video media, and configurable mask tilt. Fully compatible with Elementor (WYSIWYG widget) and WPBakery (vc_map element). Output is rendered via an external HTML/CSS template using the [diag_resp_view] shortcode.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            Giorgio Bianchi
@@ -99,22 +99,22 @@ function render($atts, $content = null) {
     if($is_mobile && $data['mobile_track'] === 'no') {
         if($data['is_video'] === 'yes') {
             $media_html = '
-                <section class="mobile-card-front">
+                <div class="flip-card-front">
                     <video autoplay muted loop>
                         <source src="' . esc_url($media_url) . '" type="video/mp4">
                     </video>
                     <div class="video-caption">
                         <h1 class="title">' . esc_html($data['title']) . '</h1>
                     </div>
-                </section>';
+                </div>';
         } else {
             $media_html = '
-                <section class="mobile-card-front">
-                    <img src="' . esc_url($image_url) . '" alt="Card image" class="masked-image">
+                <div class="flip-card-front">
+                    <img src="' . esc_url($image_url) . '" alt="Card image">
                     <div class="image-caption">
                         <h1 class="title">' . esc_html($data['title']) . '</h1>
                     </div>
-                </section>';
+                </div>';
         }
     } else {
         if ($data['is_video'] === 'yes' && $media_url) {
@@ -164,11 +164,12 @@ function render($atts, $content = null) {
                     </div>
                 </div>';
         } else {
-            $html = '
-                    <div class="container">
-                        <div class="mobile-card-container">
+            $html = '<div class="flip-card">
+                        <div class="flip-card-inner">
                             ' . $media_html . '
-                            ' . $text_content . '
+                            <div class="flip-card-back">
+                                ' . $text_content . '
+                            </div>
                         </div>
                     </div>';
         }
@@ -196,7 +197,7 @@ function diag_resp_view_enqueue_assets() {
         'diag-resp-style',
         plugin_dir_url(__FILE__) . 'assets/css/diag-resp-style.css',
         [],
-        '1.2.0',
+        '1.3.0',
         'all'
     );
 
@@ -206,7 +207,7 @@ function diag_resp_view_enqueue_assets() {
             'diag-resp-mobile-style',
             plugin_dir_url(__FILE__) . 'assets/css/diag-resp-mobile.css',
             ['diag-resp-style'],
-            '1.2.0',
+            '1.3.0',
             'all'
         );
 
@@ -214,7 +215,7 @@ function diag_resp_view_enqueue_assets() {
             'diag-resp-mobile-script',
             plugin_dir_url(__FILE__) . 'assets/js/diag-resp-mobile.js',
             [],
-            '1.2.0',
+            '1.3.0',
             true // load in footer
         );
     }

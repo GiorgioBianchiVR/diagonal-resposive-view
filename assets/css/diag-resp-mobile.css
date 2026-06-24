@@ -27,32 +27,65 @@
     transition: none;
 }
 
-/* Viewport: clips the 200vw inner track */
-.mobile-card-container {
-    width: 90vw;
+.flip-card {
+    background-color: transparent;
+    perspective: 1000px;
+    height: 60vh;
+    width:100%;
+    margin:1.35em 0.25em;
+    border-radius: 8px;
 }
 
-/* The 200vw track containing both columns */
-.mobile-card-front {
-    width: 100%;
-}
-
-.mobile-card-front video, .mobile-card-front img {
+.flip-card-inner {
+    position: relative;
     width: 100%;
     height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius:8px;
+}
+
+.flip-card-front video, .flip-card-front img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     z-index: 0;
     border-radius:8px;
 }
 
-.mobile-card-front .video-caption, .mobile-card-front .image-caption {
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+.flip-card-back > div {
+    padding: 0 1em;
+    font-size: smaller;
+}
+.video-caption,
+.image-caption {
     height: 100%;
-    width: 100%;
     z-index: 1;
-    position: relative;
+    position: absolute;
+    top: 0;
+    width: -webkit-fill-available;
     text-align: center;
-    color: white;
+    color: var(--secondary-text);
     padding: 0px 10px;
     display: flex;
     justify-content: end;
@@ -60,10 +93,6 @@
     flex-direction: column;
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.35);
-}
-
-.mobile-card-back {
-    transition: none;
 }
 
 .col {
