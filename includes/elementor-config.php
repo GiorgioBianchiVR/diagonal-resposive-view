@@ -83,6 +83,10 @@ function register_diag_resp_view_elementor($widgets_manager) {
                 ],
                 'condition'   => ['is_video!' => 'yes'],
             ]);
+            $this->add_control('mobile_track', [
+                'label' => 'Use sliding tracks on mobile?', 'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => 'Yes', 'label_off' => 'No', 'return_value' => 'yes', 'description' => 'Enable slide tracks on mobile devices.'
+            ]);
             $this->end_controls_section();
         }
 
