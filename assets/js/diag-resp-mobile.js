@@ -1,3 +1,31 @@
+// Configuration for scroll-triggered snaps
+const SCROLL_SNAP_ENABLED = true;
+const SCROLL_SNAP_DELAY_MS = 150; // delay before snapping on entry
+const SCROLL_THRESHOLD = 0.75; // 75% visible counts as "entered"
+const MOBILE_ONLY = true;
+
+const PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let scrollObserver = null;
+
+function initScrollObserverIfNeeded() {
+  if (!SCROLL_SNAP_ENABLED) return;
+  if (PREFERS_REDUCED_MOTION) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  // create observer once
+  if (scrollObserver) return;
+
+  scrollObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const inst = entry.target.__panelInstance;
+      if (!inst) return;
+      if (entry.intersectionRatio >= SCROLL_THRESHOLD) inst.onEnter();
+      else inst.onExit();
+    });
+  }, { threshold: SCROLL_THRESHOLD });
+}
+
 // Initialize all swipeable panel instances on the page
 document.querySelectorAll('.panel-viewport').forEach(viewport => {
   const track     = viewport.querySelector('.panel-track');
@@ -16,6 +44,9 @@ document.querySelectorAll('.panel-viewport').forEach(viewport => {
   let isDragging      = false;
   let currentOffset   = 0;     // current translateX value in vw
   let dragStartOffset = 0;     // offset at the moment drag began
+
+  // Timeout id for scheduled scroll-triggered snap
+  let enterTimeout = null;
 
   // --- Utilities ---
 
@@ -39,9 +70,34 @@ document.querySelectorAll('.panel-viewport').forEach(viewport => {
     hint.style.opacity = currentSnap === 0 ? '1' : '0';
   }
 
+  // --- Scroll-triggered handlers ---
+  function clearEnterTimeout() {
+    if (enterTimeout) { clearTimeout(enterTimeout); enterTimeout = null; }
+  }
+
+  function onEnter() {
+    // Don't auto-snap while user is actively dragging
+    if (isDragging) return;
+    clearEnterTimeout();
+    enterTimeout = setTimeout(() => {
+      // Snap to the alternate (final) position when entering
+      snapTo(1);
+      enterTimeout = null;
+    }, SCROLL_SNAP_DELAY_MS);
+  }
+
+  function onExit() {
+    clearEnterTimeout();
+    if (isDragging) return;
+    // Snap back to initial position when leaving
+    snapTo(0);
+  }
+
   // --- Drag logic ---
 
   function onDragStart(clientX) {
+    // Cancel any scheduled scroll snap when user starts dragging
+    clearEnterTimeout();
     isDragging      = true;
     startX          = clientX;
     startTime       = Date.now();
@@ -88,20 +144,41 @@ document.querySelectorAll('.panel-viewport').forEach(viewport => {
   // --- Event listeners ---
 
   // Touch (mobile)
-  track.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX),        { passive: true });
+ /*  track.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX),        { passive: true });
   track.addEventListener('touchmove',  e => onDragMove(e.touches[0].clientX),         { passive: true });
   track.addEventListener('touchend',   e => onDragEnd(e.changedTouches[0].clientX));
 
   // Mouse (desktop / DevTools)
   track.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX); });
   window.addEventListener('mousemove', e => onDragMove(e.clientX));
-  window.addEventListener('mouseup',   e => onDragEnd(e.clientX));
+  window.addEventListener('mouseup',   e => onDragEnd(e.clientX)); */
 
   // Tap with minimal movement toggles between panels
-  track.addEventListener('click', e => {
+  /* track.addEventListener('click', e => {
     if (Math.abs(e.clientX - startX) < 5) snapTo(currentSnap === 0 ? 1 : 0);
   });
+ */
+  // Expose instance API for the IntersectionObserver to call
+  viewport.__panelInstance = {
+    snapTo,
+    onEnter,
+    onExit,
+    get isDragging() { return isDragging; },
+    destroy() { clearEnterTimeout(); }
+  };
 
   // Set initial position (index 0 of SNAP array)
   snapTo(0);
+});
+
+// Initialize observer and start observing viewports when appropriate
+initScrollObserverIfNeeded();
+if (scrollObserver) document.querySelectorAll('.panel-viewport').forEach(v => scrollObserver.observe(v));
+
+// Cleanup on unload
+window.addEventListener('beforeunload', () => {
+  if (scrollObserver) scrollObserver.disconnect();
+  document.querySelectorAll('.panel-viewport').forEach(v => {
+    if (v.__panelInstance && v.__panelInstance.destroy) v.__panelInstance.destroy();
+  });
 });

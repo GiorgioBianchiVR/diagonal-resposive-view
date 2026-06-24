@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/giorgiobianchi
 Tags: diagonal, responsive, elementor, wpbakery, media block
 Requires at least: 5.8
 Tested up to: 7.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: MIT
 License URI: https://mit-license.org/
@@ -115,6 +115,8 @@ Yes, it has been tested up to WordPress 7.0.
 3. WPBakery element configuration popup.
 
 == Changelog ==
+= 1.3.1 =
+* Added animation on scroll slide images
 
 = 1.3.0 =
 * Implemented flip card visualisation as default for mobile devices
